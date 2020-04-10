@@ -13,6 +13,7 @@ def josephus_problem(delete_k,n):
     survive_people=people[0]
     return (delete_people,survive_people)
 
+#错误处理
 try:
     k=int(input("输入循环的号码"))
     n=int(input("输入总的人数"))
