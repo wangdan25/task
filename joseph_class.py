@@ -4,77 +4,75 @@ import os
 import zipfile
 
 class Person(object):
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+    def __init__(self):
+        self.name = None
+        self.age = None
+
+    @classmethod
+    def creat_from_reader(cls, reader):
+        obj = cls()
+        obj.name = reader[0]
+        obj.age = reader[1] 
+        return obj
 
 #约瑟夫环是一个容器，容器的功能有增删查改
 class JosephusRing(object):
-    def __init__(self):
+    def __init__(self, reader=None):
         self.start = 0
         self.step = 0
-        self.current_id = self.start - 1
-        self.__people = []
-        self.temp = copy.copy(self.__people)
+        self._people = []
+        if reader:
+            for each in reader:
+                self._people.append(Person.creat_from_reader(each))
 
     def append(self, obj):
-        self.__people.append(obj)
+        self._people.append(obj)
 
     def pop(self, index):
-        self.__people.pop(index)
+        self._people.pop(index)
 
     def query_list(self):
-        return self.__people
-    
-    def ring_lengh(self):
-        return len(self.__people)
+        return self._people
 
     def next(self):
-        id_=copy.copy(self.current_id)
-        while True:
-            size = len(self.temp)
-            if size == 0:
-                raise StopIteration
-            id_ = (id_ + (self.step-1)) % len(self.temp)
-            ret = self.temp.pop(id_)
+        id_ = self.start - 1
+        temp = copy.copy(self._people)
+        while len(temp):
+            id_ = (id_ + (self.step-1)) % len(temp)
+            ret = temp.pop(id_)
             yield ret
 
-    def reset(self):
-        self.current_id = self.start - 1
-        self.temp = copy.copy(self.__people)
-    
-    @classmethod
-    def creat_from_csv(cls, path):
-        obj = cls()
-        with open(path,"r") as csv_file:
+class ReadData(object):
+    def __init__(self, path, file_name=None):
+        self.path = path
+        self.file_name = file_name
+  
+    def read_from_csv(self):
+        data = []
+        with open(self.path,"r") as csv_file:
             reader = csv.reader(csv_file)
-            for line in reader:
-                obj.append(Person(name=line[0], age=line[1]))
-            return obj
+            for i in reader:
+                data.append(i)
+        return data
 
-    @classmethod
-    def creat_from_txt(cls, path):
-        obj = cls()
-        with open(path,"r") as txt_file:
+    def read_from_txt(self):
+        data = []
+        with open(self.path,"r") as txt_file:
             for line in txt_file:
-                temp = line.strip() 
-                name = temp[ : temp.index(',')]
-                age = temp[temp.index(',') + 1: ]
-                obj.append(Person(name,age))
-            return obj
+                temp = line.strip().split(",")
+                data.append(temp)
+            return data
     
-    @classmethod
-    def creat_from_zip(cls, path):
-        # obj_ = cls()
-        with zipfile.ZipFile(path) as zip_file:
-            file_list = zip_file.namelist()
-            choose_file = input("选择文件:{}".format(file_list))
-            file_path = zip_file.extract(choose_file)
+    def read_from_zip(self):
+        with zipfile.ZipFile(self.path) as zip_file:
+            file_path = zip_file.extract(self.file_name)
             file_type = os.path.splitext(file_path)[1]
             if file_type == ".txt":
-                return cls.creat_from_txt(file_path)
+                self.path = file_path
+                return self.read_from_txt()
             if file_type == ".CSV":
-                return cls.creat_from_csv(file_path)
+                self.path = file_path
+                return self.read_from_csv()    
             
 if __name__ == '__main__':  
     # jos.append(Person("Lisa", 13))
@@ -83,14 +81,15 @@ if __name__ == '__main__':
     # jos.append(Person("Cindy", 15))
     # jos.append(Person("Joan", 14))
     # jos.append(Person("Rose", 19))
-   
-    zip = JosephusRing.creat_from_zip("person.zip")
-    zip.start = 1
-    zip.step = 2
-    zip.reset()
-    lengh = zip.ring_lengh()
-    generator_peple = zip.next()
-    for i in range(lengh):   
+
+    data = ReadData("person.zip", "person.txt")
+    reader = data.read_from_zip()
+    ring = JosephusRing(reader)
+    ring.start = 1
+    ring.step = 2
+    length = len(ring.query_list())
+    generator_peple = ring.next()
+    for i in range(length):   
         peo = generator_peple.__next__()
         print("淘汰者名字是:{},年龄是:{}".format(peo.name,peo.age))
 
