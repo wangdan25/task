@@ -4,16 +4,11 @@ import os
 import zipfile
 
 class Person(object):
-    def __init__(self):
-        self.name = None
-        self.age = None
-
-    @classmethod
-    def creat_from_reader(cls, reader):
-        obj = cls()
-        obj.name = reader[0]
-        obj.age = reader[1] 
-        return obj
+    def __init__(self, name, age):
+        self.name = name
+        if age<0:
+            raise ValueError("The age has to be greater than 0")
+        self.age = age
 
 #约瑟夫环是一个容器，容器的功能有增删查改
 class JosephusRing(object):
@@ -23,7 +18,7 @@ class JosephusRing(object):
         self._people = []
         if reader:
             for each in reader:
-                self._people.append(Person.creat_from_reader(each))
+                self._people.append(each)
 
     def append(self, obj):
         self._people.append(obj)
@@ -42,38 +37,55 @@ class JosephusRing(object):
             ret = temp.pop(id_)
             yield ret
 
-class ReadData(object):
-    def __init__(self, path, file_name=None):
-        self.path = path
-        self.file_name = file_name
-  
-    def read_from_csv(self):
-        data = []
-        with open(self.path,"r") as csv_file:
-            reader = csv.reader(csv_file)
-            for i in reader:
-                data.append(i)
-        return data
+#定义一个接口对继承类进行约束
+class Reader(object):
+    def read_data(self):
+        raise NotImplementedError
 
-    def read_from_txt(self):
-        data = []
-        with open(self.path,"r") as txt_file:
+
+class TxtReader(Reader):
+    def __init__(self, path):
+        self.path = path
+
+    def read_data(self):
+        reader = []
+        with open(self.path, "r") as txt_file:
             for line in txt_file:
-                temp = line.strip().split(",")
-                data.append(temp)
-            return data
-    
-    def read_from_zip(self):
-        with zipfile.ZipFile(self.path) as zip_file:
-            file_path = zip_file.extract(self.file_name)
-            file_type = os.path.splitext(file_path)[1]
-            if file_type == ".txt":
-                self.path = file_path
-                return self.read_from_txt()
-            if file_type == ".CSV":
-                self.path = file_path
-                return self.read_from_csv()    
-            
+                data = line.strip().split(",")
+                name = data[0]
+                age = int(data[1])
+                reader.append(Person(name, age))
+            return reader
+
+class CsvReader(Reader):
+    def __init__(self, path):
+        self.path = path 
+
+    def read_data(self,):
+        reader = []
+        with open(self.path, "r") as csv_file:
+            data = csv.reader(csv_file)
+            for line in data:       
+                name = line[0]
+                age = int(line[1])
+                reader.append(Person(name, age))
+            return reader
+
+class ZipReader(CsvReader, TxtReader):
+    def __init__(self, path, file_name):
+        with zipfile.ZipFile(path) as zip_file:
+            self.file_path = zip_file.extract(file_name)  
+    def read_data(self):
+        file_type = os.path.splitext(self.file_path)[1]
+        print(file_type)
+        if file_type == ".txt":
+           TxtReader.__init__(self, self.file_path)
+           return TxtReader.read_data(self)
+
+        if file_type == ".CSV":
+            TxtReader.__init__(self, self.file_path)
+            return CsvReader.read_data(self)
+           
 if __name__ == '__main__':  
     # jos.append(Person("Lisa", 13))
     # jos.append(Person("Aha", 15))
@@ -82,8 +94,8 @@ if __name__ == '__main__':
     # jos.append(Person("Joan", 14))
     # jos.append(Person("Rose", 19))
 
-    data = ReadData("person.zip", "person.txt")
-    reader = data.read_from_zip()
+    data = ZipReader("person.zip","person.txt")
+    reader = data.read_data()
     ring = JosephusRing(reader)
     ring.start = 1
     ring.step = 2
@@ -92,7 +104,6 @@ if __name__ == '__main__':
     for i in range(length):   
         peo = generator_peple.__next__()
         print("淘汰者名字是:{},年龄是:{}".format(peo.name,peo.age))
-
 
 
     
