@@ -42,7 +42,6 @@ class Reader(object):
     def read_data(self):
         raise NotImplementedError
 
-
 class TxtReader(Reader):
     def __init__(self, path):
         self.path = path
@@ -71,21 +70,24 @@ class CsvReader(Reader):
                 reader.append(Person(name, age))
             return reader
 
-class ZipReader(CsvReader, TxtReader):
+class TxtFromZipReader(TxtReader):
     def __init__(self, path, file_name):
         with zipfile.ZipFile(path) as zip_file:
             self.file_path = zip_file.extract(file_name)  
+            
     def read_data(self):
-        file_type = os.path.splitext(self.file_path)[1]
-        print(file_type)
-        if file_type == ".txt":
-           TxtReader.__init__(self, self.file_path)
-           return TxtReader.read_data(self)
+        TxtReader.__init__(self, self.file_path)
+        return TxtReader.read_data(self)
 
-        if file_type == ".CSV":
-            TxtReader.__init__(self, self.file_path)
-            return CsvReader.read_data(self)
-           
+class CsvFromZipReader(CsvReader):
+    def __init__(self, path, file_name):
+        with zipfile.ZipFile(path) as zip_file:
+            self.file_path = zip_file.extract(file_name)  
+            
+    def read_data(self):
+        TxtReader.__init__(self, self.file_path)
+        return CsvReader.read_data(self)  
+
 if __name__ == '__main__':  
     # jos.append(Person("Lisa", 13))
     # jos.append(Person("Aha", 15))
@@ -94,7 +96,7 @@ if __name__ == '__main__':
     # jos.append(Person("Joan", 14))
     # jos.append(Person("Rose", 19))
 
-    data = ZipReader("person.zip","person.txt")
+    data = TxtFromZipReader("person.zip","person.txt")
     reader = data.read_data()
     ring = JosephusRing(reader)
     ring.start = 1
