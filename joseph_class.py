@@ -102,9 +102,9 @@ if __name__ == '__main__':
     ring.start = 1
     ring.step = 2
     length = len(ring.query_list())
-    generator_peple = ring.next()
+    generator_people = ring.next()
     for i in range(length):   
-        peo = generator_peple.__next__()
+        peo = generator_people.__next__()
         print("淘汰者名字是:{},年龄是:{}".format(peo.name,peo.age))
 
 
