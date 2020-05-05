@@ -52,7 +52,10 @@ class TxtReader(Reader):
             for line in txt_file:
                 data = line.strip().split(",")
                 name = data[0]
-                age = int(data[1])
+                try:
+                    age = int(data[1])
+                except ValueError as e:
+                    age = 0                
                 reader.append(Person(name, age))
             return reader
 
@@ -66,7 +69,10 @@ class CsvReader(Reader):
             data = csv.reader(csv_file)
             for line in data:       
                 name = line[0]
-                age = int(line[1])
+                try:
+                    age = int(data[1])
+                except ValueError as e:
+                    age = 0 
                 reader.append(Person(name, age))
             return reader
 
@@ -76,8 +82,8 @@ class TxtFromZipReader(TxtReader):
             self.file_path = zip_file.extract(file_name)  
             
     def read_data(self):
-        TxtReader.__init__(self, self.file_path)
-        return TxtReader.read_data(self)
+        super().__init__(self.file_path)
+        return super().read_data()
 
 class CsvFromZipReader(CsvReader):
     def __init__(self, path, file_name):
@@ -85,8 +91,8 @@ class CsvFromZipReader(CsvReader):
             self.file_path = zip_file.extract(file_name)  
             
     def read_data(self):
-        TxtReader.__init__(self, self.file_path)
-        return CsvReader.read_data(self)  
+        super().__init__(self.file_path)
+        return super().read_data()  
 
 if __name__ == '__main__':  
     # jos.append(Person("Lisa", 13))
