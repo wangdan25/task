@@ -61,11 +61,6 @@
        <string>csv</string>
       </property>
      </item>
-     <item>
-      <property name="text">
-       <string>zip</string>
-      </property>
-     </item>
     </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
