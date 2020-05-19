@@ -1,12 +1,12 @@
-from Joseph.file_reader import file_reader
+from Joseph.file_reader import file_reader as reader
 from Joseph.domain.person import Person
 
 def test_txt_reader_init():
-    txt_reader = file_reader.TxtReader("person.txt")
+    txt_reader = reader.TxtReader("person.txt")
     assert txt_reader.path == "person.txt"
 
 def test_txt_reader_read_data():
-    txt_reader = file_reader.TxtReader("person.txt")
+    txt_reader = reader.TxtReader("person.txt")
     result = txt_reader.read_data()
     assert result[0].name == "Lisa"
     assert result[0].age == 13
@@ -21,13 +21,12 @@ def test_txt_reader_read_data():
     assert result[5].name == "Rose"
     assert result[5].age == 19
 
-
 def test_csv_reader_init():
-    csv_reader = file_reader.CsvReader("person.CSV")
+    csv_reader = reader.CsvReader("person.CSV")
     assert csv_reader.path == "person.CSV"
 
 def test_csv_file_reader_read_data():
-    csv_reader = file_reader.CsvReader("person.CSV")
+    csv_reader = reader.CsvReader("person.CSV")
     result = csv_reader.read_data()
     assert result[0].name == "Lisa"
     assert result[0].age == 13
