@@ -25,7 +25,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             path = self.lineEdit.text()
             csv_reader = reader.CsvReader(path)
             result = csv_reader.read_data()
-            self.plainTextEdit.appendPlainText(result.name+" "+str(result[i].age))
+            for i in range(len(result)):
+                self.plainTextEdit.appendPlainText(result[i].name+" "+str(result[i].age))
         josephus = jos.JosephusRing(result)
         josephus.start = int(self.lineEdit_2.text())
         josephus.step = int(self.lineEdit_3.text())
