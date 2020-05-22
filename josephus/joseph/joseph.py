@@ -1,5 +1,5 @@
 import copy
-from Joseph.domain import person as ps
+from josephus.domain import person as ps
 from typing import List,Iterator
 #约瑟夫环是一个容器，容器的功能有增删查改
 class JosephusRing(object):

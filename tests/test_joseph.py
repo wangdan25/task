@@ -1,5 +1,5 @@
-from Joseph.joseph import joseph as josephus
-from Joseph.domain.person import Person
+from josephus.joseph import joseph as josephus
+from josephus.domain.person import Person
 import pytest
 
 

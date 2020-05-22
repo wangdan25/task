@@ -1,6 +1,6 @@
-from Joseph.joseph import joseph as jos
-from Joseph.domain import person as ps
-from Joseph.interface import create_ui_reader as rd
+from josephus.joseph import joseph as jos
+from josephus.domain import person as ps
+from josephus.adapter import create_ui_reader as rd
 
 print("******************************约瑟夫环游戏***********************************")
 file_name= input("请输入文件路径:")

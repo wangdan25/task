@@ -1,5 +1,5 @@
-from Joseph.file_reader import file_reader as reader
-from Joseph.domain.person import Person
+from josephus.adapter import file_reader as reader
+from josephus.domain.person import Person
 
 def test_txt_reader_init():
     txt_reader = reader.TxtReader("person.txt")

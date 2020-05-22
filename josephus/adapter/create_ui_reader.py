@@ -1,4 +1,4 @@
-from Joseph.file_reader import file_reader as rd
+from josephus.adapter import file_reader as rd
 
 class CreateUiReader():
     def __init__(self, path):

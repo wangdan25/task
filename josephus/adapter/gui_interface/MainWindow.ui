@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1002</width>
-    <height>546</height>
+    <width>982</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>20</x>
       <y>60</y>
       <width>261</width>
-      <height>351</height>
+      <height>381</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -39,10 +39,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>file_type</string>
+      <string>path_list</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="comboBox_path_list">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -53,12 +53,12 @@
      </property>
      <item>
       <property name="text">
-       <string>txt</string>
+       <string>person.txt</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>csv</string>
+       <string>person.csv</string>
       </property>
      </item>
     </widget>
@@ -101,7 +101,7 @@
       <string>step</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="lineEdit_path">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -114,7 +114,7 @@
       <string>person.txt</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="lineEdit_start">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -127,7 +127,7 @@
       <string>1</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
+    <widget class="QLineEdit" name="lineEdit_step">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -140,17 +140,30 @@
       <string>2</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="pushButton_start_game">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>270</y>
+       <y>260</y>
        <width>211</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
       <string>start_game</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_clear">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>320</y>
+       <width>211</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>clear</string>
      </property>
     </widget>
    </widget>
@@ -193,7 +206,7 @@
      <string>out_people</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <widget class="QPlainTextEdit" name="plainTextEdit_original_people">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -206,7 +219,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit_2">
+   <widget class="QPlainTextEdit" name="plainTextEdit_out_people">
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -225,7 +238,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1002</width>
+     <width>982</width>
      <height>18</height>
     </rect>
    </property>

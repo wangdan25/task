@@ -1,5 +1,5 @@
-from Joseph.joseph import joseph as jos
-from Joseph.domain import person as ps
+from josephus.joseph import joseph as jos
+from josephus.domain import person as ps
 from typing import List
 
 import csv

@@ -1,4 +1,4 @@
-from Joseph.domain.person import Person
+from josephus.domain.person import Person
 import pytest
 
 def test_person_init():
