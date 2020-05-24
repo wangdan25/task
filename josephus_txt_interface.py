@@ -1,29 +1,48 @@
 from josephus.joseph import joseph as jos
 from josephus.domain import person as ps
-from josephus.adapter import create_ui_reader as rd
+from josephus.adapter import read_data as rd
 
-print("******************************约瑟夫环游戏***********************************")
-file_name= input("请输入文件路径:")
-ui_reader = rd.CreateUiReader(file_name)
-reader = ui_reader.create_ui_reader()
-print("约瑟夫环的人有：")
-length = len(reader)
-for i in range(length):
-    print("初始的人的名字是{},年龄是{}".format(reader[i].name,reader[i].age))
-ring = jos.JosephusRing(reader)
-try:
-    ring.start = int(input("输入约瑟夫起始值:"))
-    ring.step = int(input("输入约瑟夫步进值:"))
-except:
-    print("起始值和步进值必须是正整数")
-    raise Exception
+def set_josephus_start():
+    start = int(input("请输入步进值："))
+    if start < 0:
+        raise ValueError("起始值是正整数！")
+    return start
 
-length = len(ring.query_list())
-generator_people = ring.next() 
-for i in range(length):   
-    peo = generator_people.__next__()
-    print("淘汰的人的名字是{},年龄是{}".format(peo.name, peo.age))
-print("**********************************游戏结束*************************************")
+def set_josephus_step():
+    start = int(input("请输入步进值："))
+    if start < 1:
+        raise ValueError("步进是正整数！")
+    return start
+
+def create_reader():
+    try:
+        path = input("输入文件路径：")
+    except:
+        raise FileNotFoundError("路径错误")
+    reader = rd.read_data(path)
+    return reader
+
+def show_original_data(reader):
+    print("原始数据是：")
+    for each in reader:
+        print("约瑟夫环里的人是{},年龄是{}".format(each.name, each.age))
+
+def show_result(reader):
+    print("结果是：")
+    ring = jos.JosephusRing(reader)
+    for each in ring:
+        print("被淘汰的人是{},年龄是{}".format(each.name, str(each.age)))
+
+if __name__ == '__main__':
+    print("******************************约瑟夫环游戏***********************************")
+    set_josephus_start()
+    set_josephus_step()
+    reader = create_reader()
+    show_original_data(reader)
+    show_result(reader)
+    print("********************************游戏结束*************************************")
+
+
 
 
         
