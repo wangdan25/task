@@ -3,7 +3,7 @@ from PySide2 import QtGui, QtWidgets, QtCore
 from PySide2.QtWidgets import QApplication, QMainWindow
 from josephus.adapter.gui_interface.mainwindow import Ui_MainWindow
 from josephus.joseph import joseph as jos
-from josephus.adapter import create_ui_reader as rd
+from josephus.adapter import read_data as rd
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -11,29 +11,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
  
         # 添加槽链接
-        self.pushButton_start_game.clicked.connect(self.show_result)
-        self.pushButton_clear.clicked.connect(self.clear_result)
+        self.start_game.clicked.connect(self.show_people)
+        self.clear.clicked.connect(self.clear_result)
         
-    def show_result(self):
-        file_type = self.comboBox_path_list.currentText()
-        path = self.lineEdit_path.text()
-        file_reader = rd.CreateUiReader(path)
-        result = file_reader.create_ui_reader()
-        for i in range(len(result)):
-            self.plainTextEdit_original_people.appendPlainText(result[i].name+" "+str(result[i].age))
+    def show_people(self):
+        path = self.path_list.currentText()
+        reader = rd.read_data(path)
+        for each in reader:
+            self.original_people.appendPlainText(each.name+" "+str(each.age))
 
-        josephus = jos.JosephusRing(result)
-        josephus.start = int(self.lineEdit_start.text())
-        josephus.step = int(self.lineEdit_step.text())
-        length = len(josephus.query_list())
-        generator_people = josephus.next()
-        for i in range(length):
-            out_people = generator_people.__next__()
-            self.plainTextEdit_out_people.appendPlainText(out_people.name+" "+str(out_people.age))
+        josephus = jos.JosephusRing(reader)
+        josephus.start = int(self.start.text())
+        josephus.step = int(self.step.text())
+        for each in josephus:
+            self.show_result.appendPlainText(each.name+" "+str(each.age))
         
     def clear_result(self):
-        self.plainTextEdit_original_people.clear()
-        self.plainTextEdit_out_people.clear()
+        self.original_people.clear()
+        self.show_result.clear()
 
         
 if __name__ == '__main__':
