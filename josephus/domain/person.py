@@ -1,6 +1,11 @@
 class Person(object):
-    def __init__(self, name: str, age: int):
+    def __init__(self, name: str = None, age: int = 0):
         self.name = name
-        if age<0:
-            raise ValueError("The age has to be greater than 0")
-        self.age = age
+        if age < 0:
+            self.age = 0
+        else:
+            self.age = age 
+            
+    # 判断两个person对象相等的条件
+    def __eq__(self, obj):
+        return self.name == obj.name and self.age == obj.age
