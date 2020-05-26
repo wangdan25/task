@@ -33,8 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.original_people.appendPlainText(each.name+" "+str(each.age))
 
         josephus = jos.JosephusRing(reader)
-        josephus.start,  josephus.step= self.josephus_init()
-        # josephus.step = int(self.step.text())
+        josephus.start, josephus.step= self.josephus_init()
         for each in josephus:
             self.show_result.appendPlainText(each.name+" "+str(each.age))
         
