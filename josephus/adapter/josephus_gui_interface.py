@@ -4,9 +4,9 @@ from PySide2.QtWidgets import QApplication, QMainWindow
 from PySide2.QtWidgets import QMessageBox
 from josephus.adapter.gui_interface.mainwindow import Ui_MainWindow
 from josephus.joseph import joseph as jos
-from josephus.adapter import read_data as rd
+from josephus.adapter.interface import Interface
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+class MainWindow(Interface, QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
@@ -14,26 +14,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 添加槽链接
         self.start_game.clicked.connect(self.show_people)
         self.clear.clicked.connect(self.clear_result)
- 
-    def josephus_init(self):
+
+    def create_reader(self):
+        path = self.path_list.currentText()
+        reader = self.read_data(path)
+        return reader
+
+    def set_start_step(self):
         start = int(self.start.text())
-        if start < 0:
+        try:
+            self.check_start_value(start)
+        except ValueError:
             QMessageBox.warning(self, 'warning', '起始值不能为负数！')
-            raise ValueError
+
         step = int(self.step.text())
-        if step < 1:
-            QMessageBox.warning(self, 'warning', '步进要大于0！')
-            raise ValueError
+        try:
+            self.check_step_value(step)
+        except ValueError:
+            QMessageBox.warning(self, 'warning', '步进大于1！')
         return (start, step)
 
     def show_people(self):
-        path = self.path_list.currentText()
-        reader = rd.read_data(path)
+        reader = self.create_reader()
         for each in reader:
             self.original_people.appendPlainText(each.name+" "+str(each.age))
 
-        josephus = jos.JosephusRing(reader)
-        josephus.start, josephus.step= self.josephus_init()
+        start, step = self.set_start_step()
+        josephus = self.create_joseph(reader, start, step)
         for each in josephus:
             self.show_result.appendPlainText(each.name+" "+str(each.age))
         
@@ -41,12 +48,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.original_people.clear()
         self.show_result.clear()
 
-        
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
- 
 
         
